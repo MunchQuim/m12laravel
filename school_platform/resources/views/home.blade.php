@@ -15,7 +15,7 @@
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('projects.index') }}">Iniciar sesión</a>
+                        <a class="nav-link" href="{{ route('login') }}">Iniciar sesión</a>
                     </li>
                    <!--  <li class="nav-item">
                         <a class="nav-link" href="{{
