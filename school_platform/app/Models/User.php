@@ -65,4 +65,10 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function projects()
+    {
+        return $this->belongsToMany(Project::class, 'rel_users_projects', 'user_id', 'project_id')
+            ->withPivot('updated_at', 'file_url');
+    }
 }

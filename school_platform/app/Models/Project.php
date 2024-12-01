@@ -15,4 +15,9 @@ class Project extends Model
         // Un proyecto pertenece a un usuario
         return $this->belongsTo(User::class); // Relación de uno a muchos
     }
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'rel_users_projects', 'project_id', 'user_id')
+            ->withPivot('updated_at', 'file_url');
+    }
 }
