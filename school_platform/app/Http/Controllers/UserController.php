@@ -7,8 +7,20 @@ class UserController extends Controller
     // Mostrar la lista de proyectos
     public function index()
     {
+        $role = auth()->user()->role; //si funciona en el middleware por que no aqui?
+        switch ($role) {
+            case 'admin':
+                $users = User::all();
+                break;
+            case 'teacher':
+                $users = User::where('role', 'student')->get();
+                break;            
+            default:
+                $users = collect(); //coleccion vacia para poder devolver algo
+                break;
+        }
        // Obtener todos los proyectos con el usuario relacionado
-       $users = User::all();       
+             
        return view('users.index', compact('users'));// Pasar a la vista
     }
     // Mostrar el formulario de creación VV
@@ -20,12 +32,28 @@ class UserController extends Controller
     // Guardar un nuevo Usuario VV
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email|max:255',
-            'password' => 'required|string|min:6|confirmed',
-            'role' => 'required|string|in:admin,teacher,student',
-        ]);
+        $role = auth()->user()->role; //si funciona en el middleware por que no aqui?
+        switch ($role) {
+            case 'admin':
+                $request->validate([
+                    'name' => 'required|string|max:255',
+                    'email' => 'required|email|unique:users,email|max:255',
+                    'password' => 'required|string|min:6|confirmed',
+                    'role' => 'required|string|in:admin,teacher,student',
+                ]);
+                break;
+            case 'teacher':
+                $request->validate([
+                    'name' => 'required|string|max:255',
+                    'email' => 'required|email|unique:users,email|max:255',
+                    'password' => 'required|string|min:6|confirmed',
+                    'role' => 'required|string|in:student',
+                ]);//podria no hacerlo pero me curo en salud para que solo puedan crear estos usuarios
+                break; 
+            default:
+            $request->validate(['name' => 'required|string|max:-1',]);    //con esto deberia impedir que se creen
+                break;
+        }        
         
         User::create([
             'name' => $request->name,
@@ -49,16 +77,28 @@ class UserController extends Controller
     // Actualizar un Usuario VV
     public function update(Request $request, User $user)
     {
+        
         // Validar los datos del formulario
         $request->validate([
             'name' => 'string|max:255',
-            'email' => 'email|unique:users,email|max:255',
             'password' => 'string|min:6|confirmed',
             'role' => 'string|in:admin,teacher,student',
         ]);
+        // si se ha llegado a enviar contraseña, la puede enviar encriptada
         $data = $request->only(['name', 'email', 'role']);
         if ($request->filled('password')) {
             $data['password'] = bcrypt($request->password);
+        }
+       
+            if($request->filled('email') && $user['email']!=$request['email']){//si ha cambiado el mail validalo
+                $request->validate([
+                    'email' => 'email|unique:users,email|max:255',
+                ]);
+            }
+        
+        // si no ha venido un rol (porque lo ha hecho un profesor)
+        if (!$request->filled('role')) {
+            $data['role'] = 'student';
         }
         $user->update($data);
         return redirect()->route('users.index')->with(

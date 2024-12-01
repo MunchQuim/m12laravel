@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 use App\Models\Project;
+use App\Models\RelUserProject;
 use Illuminate\Http\Request;
 class ProjectController extends Controller
 {
@@ -8,7 +9,7 @@ class ProjectController extends Controller
     public function index()
     {
         // Obtener todos los proyectos con el usuario relacionado
-        $projects = Project::with('user')->get(); 
+        $projects = Project::all(); 
         return view('projects.index', compact('projects'));// Pasar a la vista
     }
     // Mostrar el formulario de creación
@@ -25,8 +26,13 @@ class ProjectController extends Controller
             'description' => 'nullable|string',
             'deadline' => 'required|date',
         ]);
+        if( auth()->check()){
+            $defaultUser = auth() ->user();
+        } else{
         // Verificamos si existe al menos un usuario en la base de datos
         $defaultUser = \App\Models\User::first();
+        }
+
         if (!$defaultUser) {
             return redirect()->route('projects.index')->with('error', 'No default user found. Please create a user first.');
         }

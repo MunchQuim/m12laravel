@@ -29,15 +29,17 @@
         <label for="password_confirmation" class="form-label">Repite la contraseña</label>
         <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="contraseña" required>
     </div>
-    <div class="mb-3">
-        <label for="role" class="form-label">Role</label>
-        <select class="form-control" id="role" name="role" required>
-            <option value="">Selecciona un rol</option>
-            <option value="admin">Admin</option>
-            <option value="teacher">Teacher</option>
-            <option value="student">Student</option>
-        </select>
-    </div>
+    @if ($role == 'admin')
+        <div class="mb-3">
+            <label for="role" class="form-label">Role</label>
+            <select class="form-control" id="role" name="role" required>
+                <option value="admin">Admin</option>
+                <option value="teacher">Teacher</option>
+                <option value="student">Student</option>
+            </select>
+        </div>
+    @endif
+   
     <button type="submit" class="btn btn-primary">Create</button>
 </form>
 @endsection

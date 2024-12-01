@@ -14,9 +14,9 @@ class RoleMiddleware
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle($request, Closure $next ,$role)
+    public function handle($request, Closure $next, ...$role)
     {
-     if (auth()->check() && auth()->user()->role === $role) {
+     if (auth()->check() && in_array(auth()->user()->role, $role)) { //ahora $role es un array de roles, ... al poder recibir multiples parametros, uno solo lo convierte en array
      return $next($request);
      }
      //return $next($request); // por ahora por si entro como estudiante poder auto logoutear 

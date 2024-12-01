@@ -15,7 +15,13 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
             <a class="navbar-brand" href="{{ route('home')}}">School Platform</a>
+            
             <div class="collapse navbar-collapse">
+                <!-- este comando hace el chekeo de autorizacion, es decir, que has iniciado sesion -->
+                @auth 
+                    <p class="font-weight-bold">Bienvenido, <strong>{{ auth()->user()->name }}</strong></p>
+                @endauth
+                
                 <ul class="navbar-nav ms-auto"><!-- obtiene el rol de la vista que lo extiende, asegurar que esa vista recibe el rol -->
                 @switch($role) 
                     @case('admin')
@@ -31,16 +37,13 @@
                                 <button type="submit" class="btn btn-link nav-link" style="border: none; background: none; cursor: pointer;">Cerrar sesión</button>
                             </form>
                         </li>
-<!--                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('projects.index') }}">Manage Users</a>
-                        </li> -->
                         @break
                     @case('teacher')
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('projects.index') }}">Projects</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('users.indexStudents') }}">Students</a>
+                            <a class="nav-link" href="{{ route('users.index') }}">Students</a>
                         </li>
                         <li class="nav-item">
                             <form action="{{ route('logout') }}" method="POST" id="logout-form" style="display: inline;">
@@ -50,9 +53,9 @@
                         </li>
                         @break
                     @case('student')
-<!--                         <li class="nav-item">
+                        <li class="nav-item">
                             <a class="nav-link" href="{{ route('projects.index') }}">Projects</a>
-                        </li> -->
+                        </li>
                         <li class="nav-item">
                             <form action="{{ route('logout') }}" method="POST" id="logout-form" style="display: inline;">
                                 @csrf

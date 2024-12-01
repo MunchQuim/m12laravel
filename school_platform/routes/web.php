@@ -3,6 +3,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\FileController;
 
 use App\Http\Middleware\RoleMiddleware;
 use App\Http\Middleware\ShareUserRole;
@@ -21,14 +22,17 @@ Route::get('/projects', function () {
     return redirect()->route('projects.index');
 });
 
+Route::post('/upload', [FileController::class, 'upload'])->name('upload');
 
-
-Route::middleware([RoleMiddleware::class.':admin',ShareUserRole::class])->group(function () {
-    // Rutas del CRUD para Project
-    Route::resource('projects', ProjectController::class);
+Route::middleware([RoleMiddleware::class.':admin,teacher',ShareUserRole::class])->group(function () {
     // Rutas del CRUD para User
     Route::resource('users', UserController::class);
 });
+Route::middleware([RoleMiddleware::class.':admin,teacher,student',ShareUserRole::class])->group(function () {
+    // Rutas del CRUD para Project
+    Route::resource('projects', ProjectController::class);
+});
+
 Route::middleware([ShareUserRole::class])->group(function () {
     Route::get('/', function () {
         return view('home');
