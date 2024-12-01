@@ -6,12 +6,9 @@ use App\Models\Project;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 class FileController extends Controller
 {
-    public function update()
-    {
-
-    }
     public function store($userId, $projectId, $fileUrl)
     {
         RelUserProject::create([
@@ -58,15 +55,17 @@ class FileController extends Controller
                     // Eliminar el archivo de almacenamiento
                     Storage::disk('public')->delete($fileUrl);
                 }
-
                 // Guardar el archivo en el directorio 'uploads'
                 $filePath = $file->storeAs('uploads', $fileName, 'public');
-                // y actualiza el modelo.
-                $relUserProject->update([
-                    'updated_at' => now(),
-                    'file_url' => $filePath,
-                ]);
 
+                // y actualiza el modelo.
+                $updated = DB::table('rel_users_projects')/* se utiliza si las claves son compuestas */
+                    ->where('user_id', $userId)
+                    ->where('project_id', $projectId)
+                    ->update([
+                        'updated_at' => now(),
+                        'file_url' => $filePath,
+                ]);
                 return back()->with('success', 'Archivo actualizado con éxito.')->with('file', $filePath);
             } else {
                 // Guardar el archivo en el directorio 'uploads'
@@ -82,4 +81,17 @@ class FileController extends Controller
 
         return back()->with('error', 'Hubo un problema al subir el archivo.');
     }
+    public function downloadFile($userId, $projectId)
+{
+    // Verificar si el archivo existe para el usuario y el proyecto
+    $relUserProject = RelUserProject::where('user_id', $userId)
+                                     ->where('project_id', $projectId)
+                                     ->first();
+
+    if ($relUserProject && file_exists(storage_path('app/public/' . $relUserProject->file_url))) {
+        return response()->download(storage_path('app/public/' . $relUserProject->file_url));
+    }
+
+    return redirect()->back()->with('error', 'File not found.');
+}
 }

@@ -22,7 +22,7 @@ Route::get('/projects', function () {
     return redirect()->route('projects.index');
 });
 
-Route::post('/upload', [FileController::class, 'upload'])->name('upload');
+
 
 Route::middleware([RoleMiddleware::class.':admin,teacher',ShareUserRole::class])->group(function () {
     // Rutas del CRUD para User
@@ -31,6 +31,9 @@ Route::middleware([RoleMiddleware::class.':admin,teacher',ShareUserRole::class])
 Route::middleware([RoleMiddleware::class.':admin,teacher,student',ShareUserRole::class])->group(function () {
     // Rutas del CRUD para Project
     Route::resource('projects', ProjectController::class);
+
+    Route::get('/download-file/{userId}/{projectId}', [FileController::class, 'downloadFile'])->name('download.file');
+    Route::post('/upload', [FileController::class, 'upload'])->name('upload');
 });
 
 Route::middleware([ShareUserRole::class])->group(function () {

@@ -47,7 +47,8 @@ class ProjectController extends Controller
     // Mostrar un proyecto específico
     public function show(Project $project)
     {
-        return view('projects.show', compact('project'));
+        $relUserProjects = RelUserProject::where('project_id', $project->id)->get();
+        return view('projects.show', compact('project','relUserProjects'));
     }
     // Mostrar el formulario de edición
     public function edit(Project $project)
