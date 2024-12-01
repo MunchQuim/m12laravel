@@ -23,6 +23,9 @@
                             <a class="nav-link" href="{{ route('projects.index') }}">Projects</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" href="{{ route('users.index') }}">Users</a>
+                        </li>
+                        <li class="nav-item">
                             <form action="{{ route('logout') }}" method="POST" id="logout-form" style="display: inline;">
                                 @csrf
                                 <button type="submit" class="btn btn-link nav-link" style="border: none; background: none; cursor: pointer;">Cerrar sesión</button>
@@ -34,7 +37,10 @@
                         @break
                     @case('teacher')
                         <li class="nav-item">
-                            <!-- <a class="nav-link" href="{{ route('projects.index') }}">Projects</a> -->
+                            <a class="nav-link" href="{{ route('projects.index') }}">Projects</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('users.indexStudents') }}">Students</a>
                         </li>
                         <li class="nav-item">
                             <form action="{{ route('logout') }}" method="POST" id="logout-form" style="display: inline;">

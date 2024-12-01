@@ -1,6 +1,7 @@
 <?php
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
 
 use App\Http\Middleware\RoleMiddleware;
@@ -22,9 +23,11 @@ Route::get('/projects', function () {
 
 
 
-Route::middleware([RoleMiddleware::class.':admin',RoleMiddleware::class.':teacher',ShareUserRole::class])->group(function () {
+Route::middleware([RoleMiddleware::class.':admin',ShareUserRole::class])->group(function () {
     // Rutas del CRUD para Project
     Route::resource('projects', ProjectController::class);
+    // Rutas del CRUD para User
+    Route::resource('users', UserController::class);
 });
 Route::middleware([ShareUserRole::class])->group(function () {
     Route::get('/', function () {
