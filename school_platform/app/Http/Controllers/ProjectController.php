@@ -28,8 +28,7 @@ class ProjectController extends Controller
         // Verificamos si existe al menos un usuario en la base de datos
         $defaultUser = \App\Models\User::first();
         if (!$defaultUser) {
-            return redirect()->route('projects.index')->with('error', 'No 
-default user found. Please create a user first.');
+            return redirect()->route('projects.index')->with('error', 'No default user found. Please create a user first.');
         }
         Project::create([
             'name' => $request->name,
@@ -37,8 +36,7 @@ default user found. Please create a user first.');
             'deadline' => $request->deadline,
             'user_id' => $defaultUser->id, // Usuario predeterminado
         ]);
-        return redirect()->route('projects.index')->with('success', 'Project 
-created successfully!');
+        return redirect()->route('projects.index')->with('success', 'Project created successfully!');
     }
     // Mostrar un proyecto específico
     public function show(Project $project)

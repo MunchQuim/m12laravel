@@ -7,19 +7,18 @@ use Illuminate\Http\Request;
 use Laravel\Jetstream\Role;
 use Symfony\Component\HttpFoundation\Response;
 
-class RoleMiddleware
+class ShareUserRole
 {
     /**
      * Handle an incoming request.
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle($request, Closure $next ,$role)
+    public function handle($request, Closure $next)
     {
-     if (auth()->check() && auth()->user()->role === $role) {
-     return $next($request);
-     }
-     //return $next($request); // por ahora por si entro como estudiante poder auto logoutear 
-     return redirect('home'); 
+        $role = auth()->check() ? auth()->user()->role : 'noRole';
+        view()->share('role', $role);
+        return $next($request);
     }
+    /* este middleware tecnicamente pasa el rol a una vista */
 }

@@ -1,36 +1,6 @@
-<?php
-session_start();
-if (isset($_SESSION["role"])) {
-    $role = $_SESSION["role"];
-}
-switch ($role) {
-    case 'admin':
-        $nav = `<nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container">
-            <a class="navbar-brand" href="{{ route('dashboard')}}">School Platform</a>
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{route('projects.index') }}">Projects</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>`;
-        break;
-    case 'student':
-        # code...
-        break;
-    case 'teacher':
-        # code...
-        break;
-    
-    default:
-        # code...
-        break;
-}
-
-?>
+<!--                         <li class="nav-item">
+                            <a class="nav-link" href="{{route('projects.index') }}">Projects</a>
+                        </li> -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -42,17 +12,58 @@ switch ($role) {
 </head>
 
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
-            <a class="navbar-brand" href="{{ route('dashboard')}}">School Platform</a>
+            <a class="navbar-brand" href="{{ route('home')}}">School Platform</a>
             <div class="collapse navbar-collapse">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{route('projects.index') }}">Projects</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{route('logout') }}">Logout</a>
-                    </li>
+                <ul class="navbar-nav ms-auto"><!-- obtiene el rol de la vista que lo extiende, asegurar que esa vista recibe el rol -->
+                @switch($role) 
+                    @case('admin')
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('projects.index') }}">Projects</a>
+                        </li>
+                        <li class="nav-item">
+                            <form action="{{ route('logout') }}" method="POST" id="logout-form" style="display: inline;">
+                                @csrf
+                                <button type="submit" class="btn btn-link nav-link" style="border: none; background: none; cursor: pointer;">Cerrar sesión</button>
+                            </form>
+                        </li>
+<!--                         <li class="nav-item">
+                            <a class="nav-link" href="{{ route('projects.index') }}">Manage Users</a>
+                        </li> -->
+                        @break
+                    @case('teacher')
+                        <li class="nav-item">
+                            <!-- <a class="nav-link" href="{{ route('projects.index') }}">Projects</a> -->
+                        </li>
+                        <li class="nav-item">
+                            <form action="{{ route('logout') }}" method="POST" id="logout-form" style="display: inline;">
+                                @csrf
+                                <button type="submit" class="btn btn-link nav-link" style="border: none; background: none; cursor: pointer;">Cerrar sesión</button>
+                            </form>
+                        </li>
+                        @break
+                    @case('student')
+<!--                         <li class="nav-item">
+                            <a class="nav-link" href="{{ route('projects.index') }}">Projects</a>
+                        </li> -->
+                        <li class="nav-item">
+                            <form action="{{ route('logout') }}" method="POST" id="logout-form" style="display: inline;">
+                                @csrf
+                                <button type="submit" class="btn btn-link nav-link" style="border: none; background: none; cursor: pointer;">Cerrar sesión</button>
+                            </form>
+                        </li>
+                        @break
+                    @case('noRole')
+                        <li class="nav-item">
+                        <a class="nav-link" href="{{ route('login') }}">Iniciar sesión</a>
+                        </li>
+                        @break
+                    @default
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('login') }}">Iniciar sesión</a>
+                        </li>
+                @endswitch
                 </ul>
             </div>
         </div>
@@ -61,6 +72,11 @@ switch ($role) {
         @yield('content') 
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
+
+
 </body>
 
 </html>
