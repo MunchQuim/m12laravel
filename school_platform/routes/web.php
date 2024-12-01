@@ -12,12 +12,15 @@ Route::get('/home', function () {
     return view('home');
 });
 // Ruta de inicio, redirige a la lista de proyectos
-Route::get('/index', function () {
+Route::get('/projects', function () {
     return redirect()->route('projects.index');
 });
 
 Route::get('/welcome', function () {
     return view('welcome');
+});
+Route::get('/menu', function () {
+    return view('menu');
 });
 // Rutas del CRUD para Project
 Route::resource('projects', ProjectController::class);
@@ -32,7 +35,7 @@ Route::resource('projects', ProjectController::class);
     })->name('dashboard');
 });
  */
-Route::middleware([RoleMiddleware::class])->group(function () {
+Route::middleware([RoleMiddleware::class.':admin'])->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');

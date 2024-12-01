@@ -1,3 +1,36 @@
+<?php
+session_start();
+if (isset($_SESSION["role"])) {
+    $role = $_SESSION["role"];
+}
+switch ($role) {
+    case 'admin':
+        $nav = `<nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="{{ route('dashboard')}}">School Platform</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{route('projects.index') }}">Projects</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>`;
+        break;
+    case 'student':
+        # code...
+        break;
+    case 'teacher':
+        # code...
+        break;
+    
+    default:
+        # code...
+        break;
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,19 +42,16 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
-            <a class="navbar-brand" href="{{ route('projects.index') 
-}}">School Platform</a>
+            <a class="navbar-brand" href="{{ route('dashboard')}}">School Platform</a>
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{
-    route('projects.index') }}">Projects</a>
+                        <a class="nav-link" href="{{route('projects.index') }}">Projects</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{
-    route('projects.create') }}">Create Project</a>
+                        <a class="nav-link" href="{{route('logout') }}">Logout</a>
                     </li>
                 </ul>
             </div>
