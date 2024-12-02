@@ -25,6 +25,32 @@
         <label for="deadline" class="form-label">Deadline</label>
         <input type="date" class="form-control" id="deadline" name="deadline" value="{{ old('deadline') }}" required>
     </div>
+    <!-- enseñar multples usuarios -->
+    <table>
+        <thead>
+            <tr>
+
+                <th>Name</th>
+                <th>Selection</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($users as $user)
+                <tr>
+                    <td>{{$user -> name}}</td>
+                    <td><input type="checkbox" id="userId" name="userId[]" value="{{$user -> id}}"></td>
+                </tr>
+                    @empty
+                <tr>
+                    <td colspan="5" class="text-center">No user found.</td>
+                </tr>
+            @endforelse
+
+
+        </tbody>
+
+    </table>
     <button type="submit" class="btn btn-primary">Create</button>
 </form>
 @endsection

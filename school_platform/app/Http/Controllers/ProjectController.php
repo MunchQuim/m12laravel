@@ -1,8 +1,10 @@
 <?php
 namespace App\Http\Controllers;
 use App\Models\Project;
+use App\Models\User;
 use App\Models\RelUserProject;
 use Illuminate\Http\Request;
+use App\Http\Controllers\FileController;
 class ProjectController extends Controller
 {
     // Mostrar la lista de proyectos
@@ -10,13 +12,15 @@ class ProjectController extends Controller
     {
         // Obtener todos los proyectos con el usuario relacionado
         $projects = Project::all(); 
-        return view('projects.index', compact('projects'));// Pasar a la vista
+        $relUserProjects = RelUserProject::all();
+        return view('projects.index', compact('projects','relUserProjects'));// Pasar a la vista
     }
     // Mostrar el formulario de creación
     public function create()
     {
+        $users = User::where('role','student')->get();
         // Mostrar el formulario de creación
-        return view('projects.create');
+        return view('projects.create',compact('users'));
     }
     // Guardar un nuevo proyecto
     public function store(Request $request)
@@ -30,18 +34,30 @@ class ProjectController extends Controller
             $defaultUser = auth() ->user();
         } else{
         // Verificamos si existe al menos un usuario en la base de datos
-        $defaultUser = \App\Models\User::first();
+        $defaultUser = User::first();
         }
 
         if (!$defaultUser) {
             return redirect()->route('projects.index')->with('error', 'No default user found. Please create a user first.');
         }
-        Project::create([
+        $project = Project::create([
             'name' => $request->name,
             'description' => $request->description,
             'deadline' => $request->deadline,
             'user_id' => $defaultUser->id, // Usuario predeterminado
         ]);
+
+        //añadimos a relUserProjects
+        //obtenemos la id del project
+        $project_id = $project-> id;
+        $ids = $request->userId;
+        foreach ($ids as $id) {
+            //por cada usuario dado creamos una reluserproject
+            RelUserProject::create([
+                'user_id' => $id,
+                'project_id' => $project_id,
+            ]);
+        }
         return redirect()->route('projects.index')->with('success', 'Project created successfully!');
     }
     // Mostrar un proyecto específico
