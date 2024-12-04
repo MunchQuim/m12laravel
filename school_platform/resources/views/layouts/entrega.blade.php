@@ -4,7 +4,7 @@ $relUserProject = RelUserProject::where('user_id', auth()->user()->id)
 ->where('project_id', $project->id)
 ->first();
 ?>
-@if($relUserProject)
+@if($relUserProject->file_url)
         <div class="mt-4">
             <p><strong>Uploaded File:</strong> {{ basename($relUserProject->file_url) }}</p>
             <a href="{{ route('download.file', ['userId' => auth()->user()->id, 'projectId' => $project->id]) }}" class="btn btn-primary">

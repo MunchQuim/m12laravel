@@ -21,11 +21,14 @@
             @forelse ($relUserProjects as $relUserProject) 
                 <tr>
                     <td>{{$relUserProject->user->name }}</td>
+                    @if ($relUserProject->file_url)
                     <td>{{ $relUserProject->updated_at }}</td>
                     <td>
                         <a href="{{ route('download.file', [$relUserProject->user_id, $relUserProject->project_id]) }}"
                             class="btn btn-info btn-sm">descargar</a>
                     </td>
+                    @endif
+                    
                 </tr>
             @empty
                 <tr>
