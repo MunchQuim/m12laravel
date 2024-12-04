@@ -8,7 +8,7 @@ use App\Models\RelUserProject;
 use App\Models\User;
 use App\Models\Project;
 
-class CheckUserAccess
+class CheckUserAccess // este middleware da permisos a administradores o usuarios que tienen relacion con el proyecto
 {
     /**
      * Handle an incoming request.
@@ -20,13 +20,14 @@ class CheckUserAccess
     public function handle(Request $request, Closure $next)
     {
         // Obtener el ID del usuario logueado
-        $userId = auth()->id();
+        $userId = auth()->id(); //substituible ppor auth()->user()->id;
 
         // Obtener el proyecto desde la ruta
         $project = $request->route('project'); // Esto obtiene el objeto del proyecto
+
         if (auth()->user()->role != 'admin') {
             // Verificar si el proyecto tiene una relación con el usuario logueado
-            $relUserProject = RelUserProject::where('project_id', $project->id)
+            $relUserProject = RelUserProject::where('project_id', $project->id) //solo profesores que han creado el proyecto y usuarios que han sido seleccionado para el proyecto
                 ->where(function ($query) use ($userId) {
                     $query->where('user_id', $userId)
                         ->orWhereHas('project', function ($query) use ($userId) {

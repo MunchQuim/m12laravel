@@ -23,8 +23,7 @@ Route::get('/projects', function () {
     return redirect()->route('projects.index');
 });
 
-
-
+//rutas de usuarios
 Route::middleware([RoleMiddleware::class.':admin,teacher',ShareUserRole::class])->group(function () {
     // Rutas del CRUD para User
     /* Route::resource('users', UserController::class); */
@@ -40,7 +39,7 @@ Route::middleware([UsersRoleAccessMiddleware::class,ShareUserRole::class])->grou
     Route::put('users.update', [UserController::class, 'update'])->name('users.update');
 });
 
-
+//rutas de projects
 Route::middleware([RoleMiddleware::class.':admin,teacher,student',ShareUserRole::class])->group(function () {
     // Rutas del CRUD para Project
     Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
@@ -52,8 +51,6 @@ Route::middleware([RoleMiddleware::class.':admin,teacher,student',ShareUserRole:
     Route::get('/download-file/{userId}/{projectId}', [FileController::class, 'downloadFile'])->name('download.file');
     Route::post('/upload', [FileController::class, 'upload'])->name('upload');
 });
-
-
 Route::middleware([CheckUserAccess::class,ShareUserRole::class])->group(function(){
     Route::get('/projects/{project}', [ProjectController::class, 'show'])->name('projects.show');
     Route::get('/projects/{project}/edit', [ProjectController::class, 'edit'])->name('projects.edit');
